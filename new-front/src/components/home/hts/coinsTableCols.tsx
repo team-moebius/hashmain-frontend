@@ -34,7 +34,7 @@ export function coinsTableCols(monetaryUnit: string, dispatch: any): Array<ICols
     dataIndex: 'currentPrice',
     key: 'currentPrice',
     sorter: (a: any, b: any) => a.currentPrice - b.currentPrice,
-    render: (text: number) => numeral(text).format(',')
+    render: (text: number) => <p style={{ fontSize: '12px' }}>{numeral(text).format(',.00')}</p>
   }, {
     title: getTitle('일간범위'),
     dataIndex: 'changeRate',

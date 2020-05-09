@@ -29,10 +29,11 @@ function buildDtos(htsData: any): Array<Object> {
 
 function renderErrorMsg(erros : {
   descPurchase: boolean, descSale: boolean, descStopLoss: boolean,
-  stopLossErr: boolean, saleErr: boolean, purchaseErr: boolean
+  stopLossErr: boolean, saleErr: boolean, purchaseErr: boolean,
+  minPriceErr: boolean
 }): boolean {
   const res = !erros.descPurchase && !erros.descSale && !erros.descStopLoss
-  && !erros.stopLossErr && !erros.saleErr && !erros.purchaseErr
+    && !erros.stopLossErr && !erros.saleErr && !erros.purchaseErr && !erros.minPriceErr
 
   if (!res) {
     openNotification('error', '다음과 같은 이유로 등록 할 수 없습니다.', (
@@ -43,6 +44,7 @@ function renderErrorMsg(erros : {
         <p>{erros.stopLossErr && '* 감시 지정가는 최저 매수가 이하로 설정하셔야 합니다.'}</p>
         <p>{erros.saleErr && '* 매도가는 최고 매수가 이상으로 설정하셔야 합니다.'}</p>
         <p>{erros.purchaseErr && '* 자산이 부족합니다.'}</p>
+        <p>{erros.minPriceErr && '* 거래 최소 금액을 지켜주세요. (BTC: 1000 그외 500)'}</p>
       </div>
     ))
   }
@@ -96,7 +98,7 @@ function showAsset(assetsData: any, stdUnit: string, monetaryUnit: string) {
       className='backgroundColor showAsset'
       style={{ position: 'absolute' }}>
       <span style={{ marginRight: '20px' }}>{stdUnitAst && `${stdUnitAst} .${stdUnit}보유`}</span>
-      <span>{monetaryUnitAst && `${monetaryUnitAst} .${monetaryUnit}보유`}</span>
+      <span>{monetaryUnitAst && `${numeral(monetaryUnitAst).format(',.00000000')} .${monetaryUnit}보유`}</span>
     </div>
   )
 }
@@ -128,7 +130,7 @@ function HTSSetting() {
         <Tabs
           className='leftTabs backgroundColor contentsHeader'
           defaultActiveKey={selectedTab}
-          style={{ width: '645px', display: 'inline-block' }}
+          style={{ width: '520px', display: 'inline-block' }}
           onChange={(key) => { setSelectedTab(key) }}
         ><Tabs.TabPane tab={<p style={{ margin: 0, fontWeight: 600 }}>멀티거래 모드</p>} key='trade' /></Tabs>
         {showAsset(assetsData, stdUnit, monetaryUnit)}

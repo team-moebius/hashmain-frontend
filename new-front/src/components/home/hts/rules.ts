@@ -1,6 +1,7 @@
 export function orderRegisterCheck(htsData: any, stdUnit: string, assetsData: any): {
   descPurchase: boolean, descSale: boolean, descStopLoss: boolean,
-  stopLossErr: boolean, saleErr: boolean, purchaseErr: boolean
+  stopLossErr: boolean, saleErr: boolean, purchaseErr: boolean,
+  minPriceErr: boolean
 } {
   return {
     descPurchase: descendingCheck(htsData, 'purchase'),
@@ -8,7 +9,8 @@ export function orderRegisterCheck(htsData: any, stdUnit: string, assetsData: an
     descStopLoss: descendingCheck(htsData, 'stopLoss'),
     stopLossErr: stopLossRule(htsData),
     saleErr: saleRule(htsData),
-    purchaseErr: purchaseRule(htsData, stdUnit, assetsData)
+    purchaseErr: purchaseRule(htsData, stdUnit, assetsData),
+    minPriceErr: minOrderRule(htsData)
   }
 }
 
@@ -58,4 +60,27 @@ function purchaseRule(htsData: any, stdUnit: string, assetsData: any): boolean {
     purchaseError = true
   }
   return purchaseError
+}
+
+function minOrderRule(htsData: any): boolean {
+  const purchaseData = htsData.purchase ? htsData.purchase : []
+  const saleData = htsData.sale ? htsData.sale : []
+  const stopLossData = htsData.stopLoss ? htsData.stopLoss : []
+
+  const limitCheck = (data: Array<any>): boolean => {
+    let isPossible = true
+    data.forEach((elm: any) => {
+      let limitPrice = 500
+      if (elm.symbol && elm.symbol.indexOf('BTC')) {
+        limitPrice = 1000
+      }
+      if (elm.price * elm.volume < limitPrice) {
+        isPossible = false
+      }
+    })
+    return isPossible
+  }
+
+  const limitError = !(limitCheck(purchaseData) && limitCheck(saleData) && limitCheck(stopLossData))
+  return limitError
 }

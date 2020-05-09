@@ -58,7 +58,7 @@ export function htsTableCols(
       <Button
         className='customLink'
         type='link'
-        onClick={() => { dataChange(data, type, 'orderType', index, 0, setData) }} icon='sync'
+        onClick={() => { dataChage(data, type, 'orderType', index, 0, setData) }} icon='sync'
       />
     )
   }, {
@@ -68,16 +68,20 @@ export function htsTableCols(
     width: 155,
     render: (price, record, index = 0) => (
       <>
-        <InputNumber
-          style={{ textAlign: 'right' }}
-          className='tableInputNumber'
-          defaultValue={price}
-          onChange={(value) => {
-            if (typeof value === 'number') { dataChange(data, type, 'price', index, value, setData) }
-          }}
-          formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-          parser={(value = '') => value.replace(/\$\s?|(,*)/g, '')}
-        />
+        {!record.orderStatus
+        && (
+          <InputNumber
+            style={{ textAlign: 'right' }}
+            className='tableInputNumber'
+            defaultValue={price}
+            onChange={(value) => {
+              if (typeof value === 'number') { dataChage(data, type, 'price', index, value, setData) }
+            }}
+            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            parser={(value = '') => value.replace(/\$\s?|(,*)/g, '')}
+          />
+        )}
+        {record.orderStatus && price}
         <p style={{ display: 'inline-block', marginLeft: '5px' }}>.{stdUnit}</p>
       </>
     )
@@ -88,15 +92,19 @@ export function htsTableCols(
     width: 155,
     render: (volume, record, index = 0) => (
       <>
-        <InputNumber
-          className='tableInputNumber'
-          defaultValue={volume}
-          onChange={(value) => {
-            if (typeof value === 'number') { dataChange(data, type, 'volume', index, value, setData) }
-          }}
-          formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-          parser={(value = '') => value.replace(/\$\s?|(,*)/g, '')}
-        />
+        {!record.orderStatus
+        && (
+          <InputNumber
+            className='tableInputNumber'
+            defaultValue={volume}
+            onChange={(value) => {
+              if (typeof value === 'number') { dataChage(data, type, 'volume', index, value, setData) }
+            }}
+            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            parser={(value = '') => value.replace(/\$\s?|(,*)/g, '')}
+          />
+        )}
+        {record.orderStatus && volume}
         <p style={{ display: 'inline-block', marginLeft: '5px' }}>.{monetaryUnit}</p>
       </>
     )
@@ -115,16 +123,16 @@ export function htsTableCols(
       return <p style={{ textAlign: 'center' }}>{balance === 0 ? 0 : numeral(volume / balance).format('0.0')}%</p>
     }
   },
-  {
-    title: headerNames[type].total,
-    dataIndex: 'total',
-    key: 'total',
-    width: 155,
-    render: (empty, record) => <p>{`${numeral(record.price * record.volume).format(',0.00a')} .${stdUnit}`}</p>
-  }]
+    {
+      title: headerNames[type].total,
+      dataIndex: 'total',
+      key: 'total',
+      width: 155,
+      render: (empty, record) => <p>{`${numeral(record.price * record.volume).format(',0.00a')} .${stdUnit}`}</p>
+    }]
 }
 
-function dataChange(data: any, type: string, key: string, index: number, value: number, setData: any) {
+function dataChage(data: any, type: string, key: string, index: number, value: number, setData: any) {
   let temp
   if (key === 'orderType') {
     temp = produce(data, (draft: { [x: string]: { [x: string]: any }[] }) => {

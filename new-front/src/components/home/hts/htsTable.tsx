@@ -15,7 +15,7 @@ interface ITableProps {
 }
 
 function renderFooter(type: string, tableData: any) {
-  if (type === 'purchase') {
+  if (type === 'purchase' && tableData.purchase && tableData.purchase.length !== 0) {
     return purchaseRes(type, tableData)
   }
   return <div style={{ height: '0' }} />

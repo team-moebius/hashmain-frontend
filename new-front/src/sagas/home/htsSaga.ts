@@ -1,4 +1,5 @@
 import { put, call, select } from 'redux-saga/effects'
+import { openNotification } from 'common/common'
 import {
   getOrderForStockApi, fetchOrderForStockApi, fetchAPIKeyAPi, getMarketApi, getAssetsApi, getManagesApi
 } from '../../apis/htsApi'
@@ -76,10 +77,13 @@ export function* fetchHtsOrder(action: any) {
     const result = yield call(fetchOrderForStockApi, action.dtos, token)
     const hts = refineHTSData(result.data)
     const manage = refineManageData(hts)
+
     yield put(htsOrderSuccessActionType({ type: HTS_TRADE_ORDER_SUCCESS, htsData: hts, manageData: manage }))
+    openNotification('success', '주문이 정상적으로 접수되었습니다.')
   } catch (err) {
     const errMsg = err.response ? err.response.data.message : err.message
     yield put(htsOrderFailedActionType({ type: HTS_TRADE_ORDER_FAILED, msg: errMsg }))
+    openNotification('error', '주문이 접수되지 못하였습니다. 잠시후 다시 시도해주세요.')
   }
 }
 
@@ -128,6 +132,7 @@ function refineHTSData(data: { assets: Array<any>, orders: Array<any> }) {
       key: elm.id + idx,
       title: `${title[orderPosition]}${orderType[elm.orderType]}${orderPosition === 'PURCHASE' ? ' 매수' : ' 매도'}`
     }))
+    .filter((elm: any) => elm.orderStatus === 'READY' || elm.orderStatus === 'IN_PROGRESS')
 
   return {
     assets: data.assets,
