@@ -27,7 +27,7 @@ function descendingCheck(htsData: any, key: string): boolean {
 }
 
 function stopLossRule(htsData: any): boolean {
-  const minPurchase = htsData.purchase ? htsData.purchase.reduce(
+  const minPurchase = htsData.purchase && htsData.purchase.length !== 0 ? htsData.purchase.reduce(
     (previous: { price: number }, current: { price: number }) => (previous.price > current.price ? current : previous)
   ) : -1
   let stopLossError = false
@@ -40,7 +40,7 @@ function stopLossRule(htsData: any): boolean {
 }
 
 function saleRule(htsData: any): boolean {
-  const maxPurchase = htsData.purchase ? htsData.purchase.reduce(
+  const maxPurchase = htsData.purchase && htsData.purchase.length !== 0 ? htsData.purchase.reduce(
     (previous: { price: number }, current: { price: number }) => (previous.price < current.price ? current : previous)
   ) : -1
   let saleError = false
@@ -53,7 +53,7 @@ function saleRule(htsData: any): boolean {
 }
 
 function purchaseRule(htsData: any, stdUnit: string, assetsData: any): boolean {
-  const totalOrderPrice = htsData.purchase ? htsData.purchase.reduce((a: any, b: any) => (a + b.price), 0) : 0
+  const totalOrderPrice = htsData.purchase && htsData.purchase.length !== 0 ? htsData.purchase.reduce((a: any, b: any) => (a + b.price), 0) : 0
   const nowAsset = assetsData ? assetsData.filter((elm: any) => elm.currency === stdUnit.toUpperCase()) : []
   let purchaseError = false
   if (nowAsset[0] && totalOrderPrice > nowAsset[0].balance) {
@@ -71,7 +71,7 @@ function minOrderRule(htsData: any): boolean {
     let isPossible = true
     data.forEach((elm: any) => {
       let limitPrice = 500
-      if (elm.symbol && elm.symbol.indexOf('BTC')) {
+      if (elm.symbol && elm.symbol.indexOf('BTC') >= 0) {
         limitPrice = 1000
       }
       if (elm.price * elm.volume < limitPrice) {

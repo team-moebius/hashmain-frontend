@@ -1,7 +1,9 @@
-import { HTS_API_KEY_REQUESTED, HTS_API_KEY_RESET } from '../../../actionCmds/htsActionCmd'
-import { htsAPIKeyActionType, htsAPIKeyResetActionType } from '../../../actions/htsAction'
+import { HTS_API_KEY_REQUESTED } from '../../../actionCmds/htsActionCmd'
+import { htsAPIKeyActionType } from '../../../actions/htsAction'
 import { openNotification } from '../../../common/common'
 
+// will be delte this function
+// not use now 20/05/09
 export function apiKeyValidCheck(
   inputValue: { name: string, accessKey: string, secretKey: string},
   dispatch: any,
@@ -34,10 +36,10 @@ export function apiKeyValidCheck(
 export function apiKeyRegister(
   registerValue: any, dispatch: any, isValid: boolean, setIsRegister: any, exchange: string
 ): void {
-  if (!isValid) {
-    openNotification('error', 'Key 유효성 체크를 해주세요')
-    return
-  }
+  // if (!isValid) {
+  //   openNotification('error', 'Key 유효성 체크를 해주세요')
+  //   return
+  // }
 
   dispatch(htsAPIKeyActionType({
     type: HTS_API_KEY_REQUESTED,
@@ -51,6 +53,6 @@ export function apiKeyRegister(
       }
     }
   }))
-  dispatch(htsAPIKeyResetActionType({ type: HTS_API_KEY_RESET }))
+  // dispatch(htsAPIKeyResetActionType({ type: HTS_API_KEY_RESET }))
   setIsRegister(false)
 }
