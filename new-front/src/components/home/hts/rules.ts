@@ -53,7 +53,8 @@ function saleRule(htsData: any): boolean {
 }
 
 function purchaseRule(htsData: any, stdUnit: string, assetsData: any): boolean {
-  const totalOrderPrice = htsData.purchase && htsData.purchase.length !== 0 ? htsData.purchase.reduce((a: any, b: any) => (a + b.price), 0) : 0
+  const totalOrderPrice = htsData.purchase && htsData.purchase.length !== 0
+    ? htsData.purchase.reduce((a: any, b: any) => (a + b.price), 0) : 0
   const nowAsset = assetsData ? assetsData.filter((elm: any) => elm.currency === stdUnit.toUpperCase()) : []
   let purchaseError = false
   if (nowAsset[0] && totalOrderPrice > nowAsset[0].balance) {
