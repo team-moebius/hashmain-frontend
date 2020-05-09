@@ -33,7 +33,7 @@ function renderErrorMsg(erros : {
   minPriceErr: boolean
 }): boolean {
   const res = !erros.descPurchase && !erros.descSale && !erros.descStopLoss
-    && !erros.stopLossErr && !erros.saleErr && !erros.purchaseErr && !erros.minPriceErr
+  && !erros.stopLossErr && !erros.saleErr && !erros.purchaseErr && !erros.minPriceErr
 
   if (!res) {
     openNotification('error', '다음과 같은 이유로 등록 할 수 없습니다.', (

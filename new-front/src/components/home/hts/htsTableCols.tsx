@@ -69,7 +69,7 @@ export function htsTableCols(
     render: (price, record, index = 0) => (
       <>
         {!record.orderStatus
-        && (
+          && (
           <InputNumber
             style={{ textAlign: 'right' }}
             className='tableInputNumber'
@@ -80,7 +80,7 @@ export function htsTableCols(
             formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
             parser={(value = '') => value.replace(/\$\s?|(,*)/g, '')}
           />
-        )}
+          )}
         {record.orderStatus && price}
         <p style={{ display: 'inline-block', marginLeft: '5px' }}>.{stdUnit}</p>
       </>
@@ -93,7 +93,7 @@ export function htsTableCols(
     render: (volume, record, index = 0) => (
       <>
         {!record.orderStatus
-        && (
+          && (
           <InputNumber
             className='tableInputNumber'
             defaultValue={volume}
@@ -103,7 +103,7 @@ export function htsTableCols(
             formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
             parser={(value = '') => value.replace(/\$\s?|(,*)/g, '')}
           />
-        )}
+          )}
         {record.orderStatus && volume}
         <p style={{ display: 'inline-block', marginLeft: '5px' }}>.{monetaryUnit}</p>
       </>
@@ -123,13 +123,13 @@ export function htsTableCols(
       return <p style={{ textAlign: 'center' }}>{balance === 0 ? 0 : numeral(volume / balance).format('0.0')}%</p>
     }
   },
-    {
-      title: headerNames[type].total,
-      dataIndex: 'total',
-      key: 'total',
-      width: 155,
-      render: (empty, record) => <p>{`${numeral(record.price * record.volume).format(',0.00a')} .${stdUnit}`}</p>
-    }]
+  {
+    title: headerNames[type].total,
+    dataIndex: 'total',
+    key: 'total',
+    width: 155,
+    render: (empty, record) => <p>{`${numeral(record.price * record.volume).format(',0.00a')} .${stdUnit}`}</p>
+  }]
 }
 
 function dataChage(data: any, type: string, key: string, index: number, value: number, setData: any) {
