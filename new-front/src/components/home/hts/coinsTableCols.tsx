@@ -34,23 +34,31 @@ export function coinsTableCols(monetaryUnit: string, dispatch: any): Array<ICols
     dataIndex: 'currentPrice',
     key: 'currentPrice',
     sorter: (a: any, b: any) => a.currentPrice - b.currentPrice,
-    render: (text: number) => <p style={{ fontSize: '12px' }}>{numeral(text).format(',.00')}</p>
+    render: (price: number) => <p style={{ fontSize: '12px' }}>{getPrice(price)}</p>
   }, {
     title: getTitle('일간범위'),
     dataIndex: 'changeRate',
     key: 'changeRate',
     sorter: (a: any, b: any) => a.changeRate - b.changeRate,
-    render: (text: number) => (
-      <p className={text < 0 ? 'lossColor' : 'profitColor'}>{text > 0 && '+'}{numeral(text).format('0.00')}%</p>)
+    render: (changeRate: number) => (
+      <p className={changeRate < 0 ? 'lossColor' : 'profitColor'}>{changeRate > 0 && '+'}{numeral(changeRate).format('0.00')}%</p>)
   }, {
     title: getTitle('거래대금'),
     dataIndex: 'accumulatedTradePrice',
     key: 'accumulatedTradePrice',
     sorter: (a: any, b: any) => a.accumulatedTradePrice - b.accumulatedTradePrice,
-    render: (text: number) => numeral(text).format('0,0.00a')
+    render: (accumulatedTradePrice: number) => numeral(accumulatedTradePrice).format('0,0.00a')
   }]
 }
 
 function getTitle(title: string): ReactNode {
   return <p style={{ fontSize: '11px', margin: '5px 1px' }}>{title}</p>
+}
+
+function getPrice(price: number): string {
+  if (price >= 100) {
+    return numeral(price).format(',')
+  } else {
+    return numeral(price).format(',.00')
+  }
 }
