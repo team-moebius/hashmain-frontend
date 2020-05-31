@@ -182,8 +182,12 @@ function plusBtnAction(
 
 function minusBtnAction(type: string, data: any, setData: any, dispatch: any, index: number): void {
   const newData = produce(data, (draft: any) => {
-    draft[type].splice(index, 1)
+    draft[type][index].eventType = 'DELETE'
+    // draft[type].splice(index, 1)
   })
   setData(newData)
   // dispatch(htsInfoSuccessActionType({ type: HTS_TRADE_INFO_SUCCESS, htsData: newData }))
 }
+
+// 삭제할때 바로 사라지게도 해야함
+// 주문등록 후 새로 고침 필요

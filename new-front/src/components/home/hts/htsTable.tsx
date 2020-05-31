@@ -15,10 +15,17 @@ interface ITableProps {
 }
 
 function renderFooter(type: string, tableData: any) {
-  if (type === 'purchase' && tableData.purchase && tableData.purchase.length !== 0) {
+  if (type === 'purchase' && tableData && tableData.length > 0) {
     return purchaseRes(type, tableData)
   }
   return <div style={{ height: '0' }} />
+}
+
+function refineTableData(tableData: any) {
+  if (tableData && tableData.length > 0) {
+    return tableData.filter((elm: any) => elm.eventType !== 'DELETE')
+  }
+  return []
 }
 
 function HtsTable(props: ITableProps) {
@@ -28,18 +35,19 @@ function HtsTable(props: ITableProps) {
     assetsData: state.hts.assetsData,
     exchange: state.hts.exchange
   }))
+  const sourceData = refineTableData(tableData[type])
 
   return (
     <div style={{ height: type === 'purchase' ? '255px' : '215px' }}>
       <Table
         className='customTable'
         columns={htsTableCols(type, stdUnit, monetaryUnit, tableData, setTableData, dispatch, assetsData, exchange)}
-        dataSource={tableData[type]}
+        dataSource={sourceData}
         size='small'
         rowKey={(record: any, idx: number) => `${type}_${idx}`}
         pagination={false}
         scroll={{ y: 200 }}
-        footer={() => renderFooter(type, tableData)}
+        footer={() => renderFooter(type, sourceData)}
       />
     </div>
   )

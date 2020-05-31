@@ -1,4 +1,4 @@
-import { put, call, select } from 'redux-saga/effects'
+import { put, call, select, fork } from 'redux-saga/effects'
 import { openNotification } from 'common/common'
 import {
   getOrderForStockApi, fetchOrderForStockApi, fetchAPIKeyAPi, getMarketApi, getAssetsApi, getManagesApi
@@ -79,6 +79,7 @@ export function* fetchHtsOrder(action: any) {
     const manage = refineManageData(hts)
 
     yield put(htsOrderSuccessActionType({ type: HTS_TRADE_ORDER_SUCCESS, htsData: hts, manageData: manage }))
+    yield fork(fetchHtsInfo)
     openNotification('success', '주문이 정상적으로 접수되었습니다.')
   } catch (err) {
     const errMsg = err.response ? err.response.data.message : err.message

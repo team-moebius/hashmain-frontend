@@ -3,7 +3,7 @@ import { Table } from 'antd'
 import numeral from 'numeral'
 
 export function purchaseRes(type: string, tableData: any) {
-  const data = tableData.purchase || []
+  const data = tableData || []
   const tableSource = [{
     average: data.reduce((total: number, elm: any) => total + elm.price, 0) / data.length,
     totalVol: data.reduce((total: number, elm: any) => total + elm.volume, 0),

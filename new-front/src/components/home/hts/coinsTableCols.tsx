@@ -41,7 +41,9 @@ export function coinsTableCols(monetaryUnit: string, dispatch: any): Array<ICols
     key: 'changeRate',
     sorter: (a: any, b: any) => a.changeRate - b.changeRate,
     render: (changeRate: number) => (
-      <p className={changeRate < 0 ? 'lossColor' : 'profitColor'}>{changeRate > 0 && '+'}{numeral(changeRate).format('0.00')}%</p>)
+      <p className={changeRate < 0 ? 'lossColor' : 'profitColor'}>
+        {changeRate > 0 && '+'}{numeral(changeRate).format('0.00')}%</p>
+    )
   }, {
     title: getTitle('거래대금'),
     dataIndex: 'accumulatedTradePrice',
@@ -58,7 +60,6 @@ function getTitle(title: string): ReactNode {
 function getPrice(price: number): string {
   if (price >= 100) {
     return numeral(price).format(',')
-  } else {
-    return numeral(price).format(',.00')
   }
+  return numeral(price).format(',.00')
 }

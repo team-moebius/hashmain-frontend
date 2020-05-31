@@ -52,7 +52,13 @@ function renderErrorMsg(erros : {
 }
 
 function HTSBody(
-  dataLoading: boolean, monetaryUnit: string, dispatch: any, stdUnit: string, data: any, setData: any, assetsData: any
+  dataLoading: boolean,
+  monetaryUnit: string,
+  dispatch: any,
+  stdUnit: string,
+  data: any,
+  setData: any,
+  assetsData: any
 ) {
   return (
     <div className='backgroundColor' style={{ opacity: 1 }}>
