@@ -21,9 +21,10 @@ function renderFooter(type: string, tableData: any) {
   return <div style={{ height: '0' }} />
 }
 
-function refineTableData(tableData: any) {
+function refineTableData(tableData: any, isFooter?: boolean) {
   if (tableData && tableData.length > 0) {
-    return tableData.filter((elm: any) => elm.eventType !== 'DELETE')
+    if (isFooter) { return tableData.filter((elm: any) => elm.eventType !== 'DELETE') }
+    return tableData
   }
   return []
 }
@@ -35,19 +36,19 @@ function HtsTable(props: ITableProps) {
     assetsData: state.hts.assetsData,
     exchange: state.hts.exchange
   }))
-  const sourceData = refineTableData(tableData[type])
 
   return (
     <div style={{ height: type === 'purchase' ? '255px' : '215px' }}>
       <Table
         className='customTable'
         columns={htsTableCols(type, stdUnit, monetaryUnit, tableData, setTableData, dispatch, assetsData, exchange)}
-        dataSource={sourceData}
+        dataSource={refineTableData(tableData[type])}
         size='small'
         rowKey={(record: any, idx: number) => `${type}_${idx}`}
+        rowClassName={(record: any) => (record.eventType === 'DELETE' ? 'rowDelete' : '')}
         pagination={false}
         scroll={{ y: 200 }}
-        footer={() => renderFooter(type, sourceData)}
+        footer={() => renderFooter(type, refineTableData(tableData[type], true))}
       />
     </div>
   )

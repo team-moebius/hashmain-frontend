@@ -88,3 +88,7 @@
 .coinsTable .ant-card-body {
   padding: 10px;
 }
+
+.rowDelete {
+  opacity: 0.4;
+}
