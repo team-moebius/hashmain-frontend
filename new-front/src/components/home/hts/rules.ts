@@ -1,15 +1,15 @@
 export function orderRegisterCheck(htsData: any, stdUnit: string, assetsData: any): {
   descPurchase: boolean, descSale: boolean, descStopLoss: boolean,
-  stopLossErr: boolean, saleErr: boolean, purchaseErr: boolean,
+  stoplossErr: boolean, saleErr: boolean, purchaseErr: boolean,
   minPriceErr: boolean
 } {
   return {
     descPurchase: descendingCheck(htsData, 'purchase'),
     descSale: descendingCheck(htsData, 'sale'),
-    descStopLoss: descendingCheck(htsData, 'stopLoss'),
-    stopLossErr: stopLossRule(htsData),
-    saleErr: saleRule(htsData),
-    purchaseErr: purchaseRule(htsData, stdUnit, assetsData),
+    descStopLoss: descendingCheck(htsData, 'stoploss'),
+    stoplossErr: hasStoplossGreaterThanEqualLowestPurchase(htsData),
+    saleErr: hasSaleLessThanEqualHighestPurchase(htsData),
+    purchaseErr: isTotalOrderPriceGreaterThanBalance(htsData, stdUnit, assetsData),
     minPriceErr: minOrderRule(htsData)
   }
 }
@@ -26,47 +26,52 @@ function descendingCheck(htsData: any, key: string): boolean {
   return saleError
 }
 
-function stopLossRule(htsData: any): boolean {
-  const minPurchase = htsData.purchase && htsData.purchase.length !== 0 ? htsData.purchase.reduce(
-    (previous: { price: number }, current: { price: number }) => (previous.price > current.price ? current : previous)
-  ) : -1
-  let stopLossError = false
-  if (minPurchase !== -1) {
-    htsData.stopLoss.forEach((elm: any) => {
-      if (elm.price > minPurchase.price) { stopLossError = true }
-    })
+function hasStoplossGreaterThanEqualLowestPurchase(htsData: any): boolean {
+  const purchases = htsData.purchase
+  let lowestPurchasePrice = Number.MAX_VALUE
+
+  if (purchases && purchases.length !== 0) {
+    lowestPurchasePrice = purchases.map((purchase: any) => purchase.price)
+      .reduce((previousPrice: number, currentPrice: number) => (Math.min(previousPrice, currentPrice)))
   }
-  return stopLossError
+
+  return htsData.stoploss.some((e: any) => e.price >= lowestPurchasePrice)
 }
 
-function saleRule(htsData: any): boolean {
-  const maxPurchase = htsData.purchase && htsData.purchase.length !== 0 ? htsData.purchase.reduce(
-    (previous: { price: number }, current: { price: number }) => (previous.price < current.price ? current : previous)
-  ) : -1
-  let saleError = false
-  if (maxPurchase !== -1) {
-    htsData.sale.forEach((elm: any) => {
-      if (elm.price > maxPurchase.price) { saleError = true }
-    })
+function hasSaleLessThanEqualHighestPurchase(htsData: any): boolean {
+  const purchases = htsData.purchase
+  let highestPurchasePrice = Number.MIN_VALUE
+
+  if (purchases && purchases.length !== 0) {
+    highestPurchasePrice = purchases.map((purchase: any) => purchase.price)
+      .reduce((previousPrice: number, currentPrice: number) => (Math.max(previousPrice, currentPrice)))
   }
-  return saleError
+
+  return htsData.sale.some((e: any) => e.price <= highestPurchasePrice)
 }
 
-function purchaseRule(htsData: any, stdUnit: string, assetsData: any): boolean {
-  const totalOrderPrice = htsData.purchase && htsData.purchase.length !== 0
-    ? htsData.purchase.reduce((a: any, b: any) => (a + b.price), 0) : 0
-  const nowAsset = assetsData ? assetsData.filter((elm: any) => elm.currency === stdUnit.toUpperCase()) : []
-  let purchaseError = false
-  if (nowAsset[0] && totalOrderPrice > nowAsset[0].balance) {
-    purchaseError = true
+// fixme : not working
+function isTotalOrderPriceGreaterThanBalance(htsData: any, stdUnit: string, assetsData: any): boolean {
+  const purchases = htsData.purchase
+  let totalOrderPrice = 0
+  let currentAsset = { balance: 0 }
+
+  if (purchases && purchases.length !== 0) {
+    totalOrderPrice = purchases.map((purchase: any) => purchase.price)
+      .reduce((previousPrice: number, currentPrice: number) => previousPrice + currentPrice, 0)
   }
-  return purchaseError
+
+  if (assetsData) {
+    currentAsset = assetsData.find((asset: any) => asset.currency === stdUnit.toUpperCase())
+  }
+
+  return totalOrderPrice > currentAsset.balance;
 }
 
 function minOrderRule(htsData: any): boolean {
   const purchaseData = htsData.purchase ? htsData.purchase : []
   const saleData = htsData.sale ? htsData.sale : []
-  const stopLossData = htsData.stopLoss ? htsData.stopLoss : []
+  const stoplossData = htsData.stoploss ? htsData.stoploss : []
 
   const limitCheck = (data: Array<any>): boolean => {
     let isPossible = true
@@ -82,6 +87,6 @@ function minOrderRule(htsData: any): boolean {
     return isPossible
   }
 
-  const limitError = !(limitCheck(purchaseData) && limitCheck(saleData) && limitCheck(stopLossData))
+  const limitError = !(limitCheck(purchaseData) && limitCheck(saleData) && limitCheck(stoplossData))
   return limitError
 }

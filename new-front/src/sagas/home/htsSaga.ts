@@ -34,7 +34,7 @@ import {
 } from '../../actions/htsAction'
 
 /*
-  After asset Api develop, It must be modify function 'refineHTSData', 'refineManageData'
+  After asset Api develop, It must be modify function 'refineHtsData', 'refineManageData'
   It have to delete asset part
 */
 
@@ -47,7 +47,7 @@ export function* fetchHtsInfo() {
       exchange: state.hts.exchange
     }))
     const result = yield call(getOrderForStockApi, exchange, token, monetaryUnit, stdUnit)
-    const hts = refineHTSData(result.data)
+    const hts = refineHtsData(result.data)
     const manage = refineManageData(hts)
     yield put(htsInfoSuccessActionType({ type: HTS_TRADE_INFO_SUCCESS, htsData: hts, manageData: manage }))
   } catch (err) {
@@ -75,7 +75,7 @@ export function* fetchHtsOrder(action: any) {
   try {
     const token = window.localStorage.getItem('token') || 'empty'
     const result = yield call(fetchOrderForStockApi, action.dtos, token)
-    const hts = refineHTSData(result.data)
+    const hts = refineHtsData(result.data)
     const manage = refineManageData(hts)
 
     yield put(htsOrderSuccessActionType({ type: HTS_TRADE_ORDER_SUCCESS, htsData: hts, manageData: manage }))
@@ -121,7 +121,7 @@ export function* fetchManages(action: any) {
   }
 }
 
-function refineHTSData(data: { assets: Array<any>, orders: Array<any> }) {
+function refineHtsData(data: { assets: Array<any>, orders: Array<any> }) {
   const title = { SALE: '차 이익실현 지정', PURCHASE: '차 지정', STOPLOSS: '차 감시 지정' }
   const orderType = { LIMIT: '가', MARKET: ' 시장가' }
   const customFilter = (orderPosition: string) => data.orders.filter((elm) => elm.orderPosition === orderPosition)
@@ -139,11 +139,11 @@ function refineHTSData(data: { assets: Array<any>, orders: Array<any> }) {
     assets: data.assets,
     sale: customFilter('SALE'),
     purchase: customFilter('PURCHASE'),
-    stopLoss: customFilter('STOPLOSS')
+    stoploss: customFilter('STOPLOSS')
   }
 }
 
-function refineManageData(data: { assets: any[], sale: any[], purchase: any[], stopLoss: any[] }) {
+function refineManageData(data: { assets: any[], sale: any[], purchase: any[], stoploss: any[] }) {
   const res: { ownCoin: string; average: number; totalVol: any; assessment: number; profit: number }[] = []
   if (!data.assets) { return [] }
   data.assets.forEach((walElm: any) => {

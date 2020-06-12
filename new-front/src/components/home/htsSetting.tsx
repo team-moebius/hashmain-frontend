@@ -20,7 +20,7 @@ import '../../style/hts.css'
 
 
 function buildDtos(htsData: any): Array<Object> {
-  return [].concat(htsData.sale).concat(htsData.purchase).concat(htsData.stopLoss)
+  return [].concat(htsData.sale).concat(htsData.purchase).concat(htsData.stoploss)
     .map((elm: any) => {
       if (elm.eventType === 'READ') { return { ...elm, eventType: 'UPDATE' } }
       return elm
@@ -29,11 +29,11 @@ function buildDtos(htsData: any): Array<Object> {
 
 function renderErrorMsg(erros : {
   descPurchase: boolean, descSale: boolean, descStopLoss: boolean,
-  stopLossErr: boolean, saleErr: boolean, purchaseErr: boolean,
+  stoplossErr: boolean, saleErr: boolean, purchaseErr: boolean,
   minPriceErr: boolean
 }): boolean {
   const res = !erros.descPurchase && !erros.descSale && !erros.descStopLoss
-  && !erros.stopLossErr && !erros.saleErr && !erros.purchaseErr && !erros.minPriceErr
+  && !erros.stoplossErr && !erros.saleErr && !erros.purchaseErr && !erros.minPriceErr
 
   if (!res) {
     openNotification('error', '다음과 같은 이유로 등록 할 수 없습니다.', (
@@ -41,7 +41,7 @@ function renderErrorMsg(erros : {
         <p>{erros.descPurchase && '* 이익실현은 N-1차 보다 낮은 가격으로 설정하셔야 합니다.'}</p>
         <p>{erros.descSale && '* 매수는 N-1차 보다 높은 가격으로 설정하셔야 합니다.'}</p>
         <p>{erros.descStopLoss && '* 감시지정은 N-1차 보다 낮은 가격으로 설정하셔야 합니다.'}</p>
-        <p>{erros.stopLossErr && '* 감시 지정가는 최저 매수가 이하로 설정하셔야 합니다.'}</p>
+        <p>{erros.stoplossErr && '* 감시 지정가는 최저 매수가 이하로 설정하셔야 합니다.'}</p>
         <p>{erros.saleErr && '* 매도가는 최고 매수가 이상으로 설정하셔야 합니다.'}</p>
         <p>{erros.purchaseErr && '* 자산이 부족합니다.'}</p>
         <p>{erros.minPriceErr && '* 거래 최소 금액을 지켜주세요. (BTC: 1000 그외 500)'}</p>
@@ -72,7 +72,7 @@ function HTSBody(
         </Card>
         <Card style={{ display: 'inline-block', border: '0px solid white', width: '100%' }} loading={dataLoading}>
           <HtsTable
-            type='stopLoss' stdUnit={stdUnit} monetaryUnit={monetaryUnit} tableData={data} setTableData={setData} />
+            type='stoploss' stdUnit={stdUnit} monetaryUnit={monetaryUnit} tableData={data} setTableData={setData} />
         </Card>
         <Card style={{ display: 'inline-block', border: '0px solid white', width: '100%' }} loading={dataLoading}>
           <Button
