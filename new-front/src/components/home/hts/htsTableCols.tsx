@@ -35,7 +35,8 @@ export function htsTableCols(
       <Button
         type='link'
         className='customLink'
-        onClick={() => minusBtnAction(type, data, setData, dispatch, index)} icon='minus-circle'
+        onClick={() => minusBtnAction(type, data, setData, dispatch, index, record.orderStatus)}
+        icon={record.eventType === 'DELETE' ? 'reload' : 'minus-circle'}
       />
     )
   }, {
@@ -180,9 +181,11 @@ function plusBtnAction(
   // dispatch(htsInfoSuccessActionType({ type: HTS_TRADE_INFO_SUCCESS, htsData: newData }))
 }
 
-function minusBtnAction(type: string, data: any, setData: any, dispatch: any, index: number): void {
+function minusBtnAction(type: string, data: any, setData: any, dispatch: any, index: number, status: any): void {
   const newData = produce(data, (draft: any) => {
-    draft[type][index].eventType = 'DELETE'
+    if (draft[type][index].eventType === 'DELETE') {
+      draft[type][index].eventType = status ? 'READ' : 'CREATE'
+    } else { draft[type][index].eventType = 'DELETE' }
     // draft[type].splice(index, 1)
   })
   setData(newData)
