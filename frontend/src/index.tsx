@@ -1,13 +1,31 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import 'react-app-polyfill/ie9'
+import 'react-app-polyfill/stable'
 
-import * as serviceWorker from 'serviceWorker';
-import App from 'App';
+import * as React from 'react'
+import { render } from 'react-dom'
+import { BrowserRouter } from 'react-router-dom'
+import { Provider } from 'react-redux'
 
-import 'index.scss';
+import configureStore from './common/store'
+import Routers from './common/router/routers'
+import Particle from './common/particle'
 
-ReactDOM.render(<App />, document.getElementById('root'));
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+import './index.css'
+
+const store = configureStore()
+
+const Root = (
+  <div style={{ height: '100%' }}>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Particle />
+        <Routers />
+      </BrowserRouter>
+    </Provider>
+  </div>
+)
+
+render(
+  Root,
+  document.getElementById('root') as HTMLElement
+)
