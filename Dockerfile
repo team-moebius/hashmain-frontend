@@ -1,7 +1,7 @@
 # Build
 FROM node:10.13.0 as builder
 WORKDIR /app
-COPY frontend ./
+COPY . ./
 RUN yarn
 RUN yarn build
 
