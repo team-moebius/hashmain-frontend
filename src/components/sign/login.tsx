@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { signInAction, signResetAction } from '../../actions/signAction'
 import { ReducerState } from '../../reducers/rootReducer'
 import { SIGN_IN_REQUESTED, SIGN_REDUCER_RESET } from '../../actionCmds/signActionCmd'
-import { signInFailedFunc } from '../sign/signFuntions'
+import { signInFailedFunc } from './signFuntions'
 import { useCustomRouter } from '../../common/router/routerPush'
 // import { openNotification } from '../../common/common'
 
