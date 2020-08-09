@@ -1,6 +1,6 @@
 import { put, call, select } from 'redux-saga/effects'
 import {
-  getOrderForStockApi, fetchOrderForStockApi, fetchAPIKeyAPi, getMarketApi, getAssetsApi, getManagesApi
+  getOrderApi, getAllOrdersApi, getApiKeyApi, getMarketApi, getAssetsApi, getOrderAssetsApi
 } from '../../apis/htsApi'
 import { ReducerState } from '../../reducers/rootReducer'
 import {
@@ -45,7 +45,7 @@ export function* fetchHtsInfo() {
       stdUnit: state.hts.stdUnit,
       exchange: state.hts.exchange
     }))
-    const result = yield call(getOrderForStockApi, exchange, token, monetaryUnit, stdUnit)
+    const result = yield call(getOrderApi, exchange, token, monetaryUnit, stdUnit)
     const hts = refineHTSData(result.data)
     const manage = refineManageData(hts)
     yield put(htsInfoSuccessActionType({ type: HTS_TRADE_INFO_SUCCESS, htsData: hts, manageData: manage }))
@@ -73,7 +73,7 @@ export function* fetchHtsMarketInfo(action: any) {
 export function* fetchHtsOrder(action: any) {
   try {
     const token = window.localStorage.getItem('token') || 'empty'
-    const result = yield call(fetchOrderForStockApi, action.dtos, token)
+    const result = yield call(getAllOrdersApi, action.dtos, token)
     const hts = refineHTSData(result.data)
     const manage = refineManageData(hts)
     yield put(htsOrderSuccessActionType({ type: HTS_TRADE_ORDER_SUCCESS, htsData: hts, manageData: manage }))
@@ -86,7 +86,7 @@ export function* fetchHtsOrder(action: any) {
 export function* fetchAPIKey(action: any) {
   try {
     const token = window.localStorage.getItem('token') || 'empty'
-    const result = yield call(fetchAPIKeyAPi, action.restType, token)
+    const result = yield call(getApiKeyApi, action.restType, token)
     yield put(htsAPIKeySuccessActionType({ type: HTS_API_KEY_SUCCESS, answer: result.data }))
   } catch (err) {
     const errMsg = err.response ? err.response.data.message : err.message
@@ -108,7 +108,7 @@ export function* fetchAssets(action: any) {
 export function* fetchManages(action: any) {
   try {
     const token = window.localStorage.getItem('token') || 'empty'
-    const result = yield call(getManagesApi, action.exchange, token)
+    const result = yield call(getOrderAssetsApi, action.exchange, token)
     yield put(htsMangagesSuccessActionType({ type: HTS_MANAGES_SUCCESS, manageData: result.data.orderStatuses }))
   } catch (err) {
     const errMsg = err.response ? err.response.data.message : err.message

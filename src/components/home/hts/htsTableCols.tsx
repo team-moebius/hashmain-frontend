@@ -15,7 +15,7 @@ interface IColsType {
 }
 
 // stdUnit is diffrent with hts reducer and hts hooks.
-// This is hts hooks, after when we hts top button using, It must be change to hts reudcer(Need a policy).
+// This is hts hooks, after when we hts top button using, It must be changed to hts reducer (Need a policy).
 export function htsTableCols(
   type: string,
   stdUnit: string,
