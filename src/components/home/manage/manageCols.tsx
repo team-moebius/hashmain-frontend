@@ -26,7 +26,7 @@ export function manageCols() {
     dataIndex: 'balance',
     key: 'balance',
     algin: 'center',
-    render: (text: number) => (Number.isNaN(text) || text === 0 ? '-' : numeral(text).format('0,0'))
+    render: (text: number) => (Number.isNaN(text) || text === 0 ? '-' : numeral(text).format('0,0.00000000'))
   }, {
     title: '거래 가격',
     dataIndex: 'tradePrice',

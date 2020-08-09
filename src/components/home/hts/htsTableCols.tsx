@@ -15,7 +15,7 @@ interface IColsType {
 }
 
 // stdUnit is diffrent with hts reducer and hts hooks.
-// This is hts hooks, after when we hts top button using, It must be changed to hts reducer (Need a policy).
+// This is hts hooks, after when we hts top button using, It must be change to hts reudcer(Need a policy).
 export function htsTableCols(
   type: string,
   stdUnit: string,
@@ -35,7 +35,8 @@ export function htsTableCols(
       <Button
         type='link'
         className='customLink'
-        onClick={() => minusBtnAction(type, data, setData, dispatch, index)} icon='minus-circle'
+        onClick={() => minusBtnAction(type, data, setData, dispatch, index, record.orderStatus)}
+        icon={record.eventType === 'DELETE' ? 'reload' : 'minus-circle'}
       />
     )
   }, {
@@ -58,7 +59,7 @@ export function htsTableCols(
       <Button
         className='customLink'
         type='link'
-        onClick={() => { dataChange(data, type, 'orderType', index, 0, setData) }} icon='sync'
+        onClick={() => { dataChage(data, type, 'orderType', index, 0, setData) }} icon='sync'
       />
     )
   }, {
@@ -68,16 +69,20 @@ export function htsTableCols(
     width: 155,
     render: (price, record, index = 0) => (
       <>
-        <InputNumber
-          style={{ textAlign: 'right' }}
-          className='tableInputNumber'
-          defaultValue={price}
-          onChange={(value) => {
-            if (typeof value === 'number') { dataChange(data, type, 'price', index, value, setData) }
-          }}
-          formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-          parser={(value = '') => value.replace(/\$\s?|(,*)/g, '')}
-        />
+        {!record.orderStatus
+          && (
+          <InputNumber
+            style={{ textAlign: 'right' }}
+            className='tableInputNumber'
+            defaultValue={price}
+            onChange={(value) => {
+              if (typeof value === 'number') { dataChage(data, type, 'price', index, value, setData) }
+            }}
+            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            parser={(value = '') => value.replace(/\$\s?|(,*)/g, '')}
+          />
+          )}
+        {record.orderStatus && price}
         <p style={{ display: 'inline-block', marginLeft: '5px' }}>.{stdUnit}</p>
       </>
     )
@@ -88,15 +93,19 @@ export function htsTableCols(
     width: 155,
     render: (volume, record, index = 0) => (
       <>
-        <InputNumber
-          className='tableInputNumber'
-          defaultValue={volume}
-          onChange={(value) => {
-            if (typeof value === 'number') { dataChange(data, type, 'volume', index, value, setData) }
-          }}
-          formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-          parser={(value = '') => value.replace(/\$\s?|(,*)/g, '')}
-        />
+        {!record.orderStatus
+          && (
+          <InputNumber
+            className='tableInputNumber'
+            defaultValue={volume}
+            onChange={(value) => {
+              if (typeof value === 'number') { dataChage(data, type, 'volume', index, value, setData) }
+            }}
+            formatter={(value) => `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+            parser={(value = '') => value.replace(/\$\s?|(,*)/g, '')}
+          />
+          )}
+        {record.orderStatus && volume}
         <p style={{ display: 'inline-block', marginLeft: '5px' }}>.{monetaryUnit}</p>
       </>
     )
@@ -124,7 +133,7 @@ export function htsTableCols(
   }]
 }
 
-function dataChange(data: any, type: string, key: string, index: number, value: number, setData: any) {
+function dataChage(data: any, type: string, key: string, index: number, value: number, setData: any) {
   let temp
   if (key === 'orderType') {
     temp = produce(data, (draft: { [x: string]: { [x: string]: any }[] }) => {
@@ -172,10 +181,16 @@ function plusBtnAction(
   // dispatch(htsInfoSuccessActionType({ type: HTS_TRADE_INFO_SUCCESS, htsData: newData }))
 }
 
-function minusBtnAction(type: string, data: any, setData: any, dispatch: any, index: number): void {
+function minusBtnAction(type: string, data: any, setData: any, dispatch: any, index: number, status: any): void {
   const newData = produce(data, (draft: any) => {
-    draft[type].splice(index, 1)
+    if (draft[type][index].eventType === 'DELETE') {
+      draft[type][index].eventType = status ? 'READ' : 'CREATE'
+    } else { draft[type][index].eventType = 'DELETE' }
+    // draft[type].splice(index, 1)
   })
   setData(newData)
   // dispatch(htsInfoSuccessActionType({ type: HTS_TRADE_INFO_SUCCESS, htsData: newData }))
 }
+
+// 삭제할때 바로 사라지게도 해야함
+// 주문등록 후 새로 고침 필요

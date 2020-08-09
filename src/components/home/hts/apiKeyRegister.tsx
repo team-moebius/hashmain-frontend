@@ -42,10 +42,13 @@ function renderRegisterKey(
         <li>매매 포지션을 설정하는 것은 전적으로 회원의 선택에 따른 것으로서 가상화폐 시세 하락으로 거래 결과가
           손해로 이어질 수 있으며, ICORE. Inc는 이에 대하여 책임을 지지 않습니다.</li><br />
       </ul>
+      {/* <Button
+        className='apiKeyCheck'
+        onClick={() => apiKeyValidCheck(inputValue, dispatch, isValid, exchange)}>API KEY 유효성 검사</Button> */}
       <Button
         type='primary'
         style={{ width: '49%' }}
-        onClick={() => apiKeyRegister(registerValue, dispatch, isValid, setIsRegister, exchange)}>등록하기</Button>
+        onClick={() => apiKeyRegister(inputValue, dispatch, isValid, setIsRegister, exchange)}>등록하기</Button>
       <Button type='primary' style={{ width: '49%', float: 'right' }} onClick={() => setIsRegister(false)}>돌아가기</Button>
     </div>
   )

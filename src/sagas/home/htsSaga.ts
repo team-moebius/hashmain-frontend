@@ -1,6 +1,7 @@
-import { put, call, select } from 'redux-saga/effects'
+import { put, call, select, fork } from 'redux-saga/effects'
+import { openNotification } from 'common/common'
 import {
-  getOrderApi, getAllOrdersApi, getApiKeyApi, getMarketApi, getAssetsApi, getOrderAssetsApi
+  getOrderForStockApi, fetchOrderForStockApi, fetchAPIKeyAPi, getMarketApi, getAssetsApi, getManagesApi
 } from '../../apis/htsApi'
 import { ReducerState } from '../../reducers/rootReducer'
 import {
@@ -33,7 +34,7 @@ import {
 } from '../../actions/htsAction'
 
 /*
-  After asset Api develop, It must be modify function 'refineHTSData', 'refineManageData'
+  After asset Api develop, It must be modify function 'refineHtsData', 'refineManageData'
   It have to delete asset part
 */
 
@@ -45,8 +46,8 @@ export function* fetchHtsInfo() {
       stdUnit: state.hts.stdUnit,
       exchange: state.hts.exchange
     }))
-    const result = yield call(getOrderApi, exchange, token, monetaryUnit, stdUnit)
-    const hts = refineHTSData(result.data)
+    const result = yield call(getOrderForStockApi, exchange, token, monetaryUnit, stdUnit)
+    const hts = refineHtsData(result.data)
     const manage = refineManageData(hts)
     yield put(htsInfoSuccessActionType({ type: HTS_TRADE_INFO_SUCCESS, htsData: hts, manageData: manage }))
   } catch (err) {
@@ -73,20 +74,24 @@ export function* fetchHtsMarketInfo(action: any) {
 export function* fetchHtsOrder(action: any) {
   try {
     const token = window.localStorage.getItem('token') || 'empty'
-    const result = yield call(getAllOrdersApi, action.dtos, token)
-    const hts = refineHTSData(result.data)
+    const result = yield call(fetchOrderForStockApi, action.dtos, token)
+    const hts = refineHtsData(result.data)
     const manage = refineManageData(hts)
+
     yield put(htsOrderSuccessActionType({ type: HTS_TRADE_ORDER_SUCCESS, htsData: hts, manageData: manage }))
+    yield fork(fetchHtsInfo)
+    openNotification('success', '주문이 정상적으로 접수되었습니다.')
   } catch (err) {
     const errMsg = err.response ? err.response.data.message : err.message
     yield put(htsOrderFailedActionType({ type: HTS_TRADE_ORDER_FAILED, msg: errMsg }))
+    openNotification('error', '주문이 접수되지 못하였습니다. 잠시후 다시 시도해주세요.')
   }
 }
 
 export function* fetchAPIKey(action: any) {
   try {
     const token = window.localStorage.getItem('token') || 'empty'
-    const result = yield call(getApiKeyApi, action.restType, token)
+    const result = yield call(fetchAPIKeyAPi, action.restType, token)
     yield put(htsAPIKeySuccessActionType({ type: HTS_API_KEY_SUCCESS, answer: result.data }))
   } catch (err) {
     const errMsg = err.response ? err.response.data.message : err.message
@@ -108,7 +113,7 @@ export function* fetchAssets(action: any) {
 export function* fetchManages(action: any) {
   try {
     const token = window.localStorage.getItem('token') || 'empty'
-    const result = yield call(getOrderAssetsApi, action.exchange, token)
+    const result = yield call(getManagesApi, action.exchange, token)
     yield put(htsMangagesSuccessActionType({ type: HTS_MANAGES_SUCCESS, manageData: result.data.orderStatuses }))
   } catch (err) {
     const errMsg = err.response ? err.response.data.message : err.message
@@ -116,7 +121,7 @@ export function* fetchManages(action: any) {
   }
 }
 
-function refineHTSData(data: { assets: Array<any>, orders: Array<any> }) {
+function refineHtsData(data: { assets: Array<any>, orders: Array<any> }) {
   const title = { SALE: '차 이익실현 지정', PURCHASE: '차 지정', STOPLOSS: '차 감시 지정' }
   const orderType = { LIMIT: '가', MARKET: ' 시장가' }
   const customFilter = (orderPosition: string) => data.orders.filter((elm) => elm.orderPosition === orderPosition)
@@ -128,16 +133,17 @@ function refineHTSData(data: { assets: Array<any>, orders: Array<any> }) {
       key: elm.id + idx,
       title: `${title[orderPosition]}${orderType[elm.orderType]}${orderPosition === 'PURCHASE' ? ' 매수' : ' 매도'}`
     }))
+    .filter((elm: any) => elm.orderStatus === 'READY' || elm.orderStatus === 'IN_PROGRESS')
 
   return {
     assets: data.assets,
     sale: customFilter('SALE'),
     purchase: customFilter('PURCHASE'),
-    stopLoss: customFilter('STOPLOSS')
+    stoploss: customFilter('STOPLOSS')
   }
 }
 
-function refineManageData(data: { assets: any[], sale: any[], purchase: any[], stopLoss: any[] }) {
+function refineManageData(data: { assets: any[], sale: any[], purchase: any[], stoploss: any[] }) {
   const res: { ownCoin: string; average: number; totalVol: any; assessment: number; profit: number }[] = []
   if (!data.assets) { return [] }
   data.assets.forEach((walElm: any) => {
