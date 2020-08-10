@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, Icon, Input } from 'antd'
+import { Button, Input } from 'antd'
+import { CaretDownOutlined } from '@ant-design/icons'
 import { apiKeyRegister } from './apiKeyRegisterFunc'
 import { ReducerState } from '../../../reducers/rootReducer'
 import apiSvg from '../../../svg/api.svg'
@@ -60,7 +61,7 @@ function renderDisplayKey(setIsRegister: any) {
       <img src={apiSvg} alt='' style={{ width: '75px', height: '65px', marginTop: '10px' }} />
       <p style={{ marginTop: '10px' }}>API KEY를 등록하시기 바랍니다.</p>
       <p style={{ marginBottom: '10px' }}>{'( 펼쳐보기 > KEY 등록 > 유효성 검사 > 등록완료 )'}</p>
-      <Button type='link' onClick={() => { setIsRegister(true) }}><Icon type='caret-down' /> 펼쳐보기</Button>
+      <Button type='link' onClick={() => { setIsRegister(true) }}><CaretDownOutlined /> 펼쳐보기</Button>
     </div>
   )
 }

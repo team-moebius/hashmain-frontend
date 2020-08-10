@@ -44,7 +44,6 @@ function HtsTable(props: ITableProps) {
         columns={htsTableCols(type, stdUnit, monetaryUnit, tableData, setTableData, dispatch, assetsData, exchange)}
         dataSource={refineTableData(tableData[type])}
         size='small'
-        rowKey={(record: any, idx: number) => `${type}_${idx}`}
         rowClassName={(record: any) => (record.eventType === 'DELETE' ? 'rowDelete' : '')}
         pagination={false}
         scroll={{ y: 200 }}

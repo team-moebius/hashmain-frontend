@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import Home from '../../components/home'
-import Sign from '../../components/sign'
+import Sign from '../../components/sign/signIndex'
 import NotFound from '../../components/notFound'
 
 function Routers() {

@@ -1,5 +1,6 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import { memberCheckReqAction } from 'actions/signAction'
 import { ReducerState } from '../reducers/rootReducer'
 import HTSSetting from './home/htsSetting'
 import Second from './home/second'
@@ -32,11 +33,18 @@ function getContents(menuMode: string) {
 
 function Home() {
   const { menuMode, tokenValid } = useSelector((state: ReducerState) => ({
-    menuMode: state.home.menuMode,
-    tokenValid: state.common.tokenValid
+    menuMode: state.common.menuMode,
+    tokenValid: state.sign.tokenValid
   }))
   const nowToken = window.localStorage.getItem('token')
   const router = useCustomRouter()
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (nowToken && !tokenValid) {
+      dispatch(memberCheckReqAction())
+    }
+  }, [dispatch, nowToken, tokenValid])
 
   return (
     <>

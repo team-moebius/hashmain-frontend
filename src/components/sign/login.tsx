@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react'
-import { Input, Button, Icon, Badge } from 'antd'
+import { Input, Button, Badge } from 'antd'
+import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
-import { signInAction, signResetAction } from '../../actions/signAction'
+import { signInReqAction, signResetAction } from '../../actions/signAction'
 import { ReducerState } from '../../reducers/rootReducer'
-import { SIGN_IN_REQUESTED, SIGN_REDUCER_RESET } from '../../actionCmds/signActionCmd'
-import { signInFailedFunc } from './signFuntions'
+import { signInFailedFunc } from '../sign/signFuntions'
 import { useCustomRouter } from '../../common/router/routerPush'
 // import { openNotification } from '../../common/common'
 
@@ -36,7 +36,6 @@ function Login() {
   const token = window.localStorage.getItem('token')
   const inputValue = { mail: '', pwd: '' }
 
-
   useEffect(() => {
     if (signInFailed) { signInFailedFunc(dispatch) }
     if (token) { router.push('/') }
@@ -48,13 +47,13 @@ function Login() {
         style={{ marginTop: '10px', textAlign: 'left' }}
         placeholder='E-Mail'
         onChange={(e) => { inputValue.mail = e.target.value }}
-        prefix={<Icon type='mail' style={{ marginRight: '5px' }} />}
+        prefix={<MailOutlined style={{ marginRight: '5px' }} />}
       />
       <Input.Password
         style={{ marginTop: '10px', textAlign: 'left' }}
         placeholder='Password'
         onChange={(e) => { inputValue.pwd = e.target.value }}
-        prefix={<Icon type='lock' style={{ marginRight: '10px' }} />}
+        prefix={<LockOutlined style={{ marginRight: '10px' }} />}
       />
       <Button
         className='customBtn'
@@ -65,8 +64,8 @@ function Login() {
           //   openNotification('error', '입력을 확인해주세요.')
           //   return
           // }
-          dispatch(signInAction({ type: SIGN_IN_REQUESTED, mail: inputValue.mail, pwd: inputValue.pwd }))
-          dispatch(signResetAction({ type: SIGN_REDUCER_RESET }))
+          dispatch(signInReqAction({ mail: inputValue.mail, pwd: inputValue.pwd }))
+          dispatch(signResetAction())
         }}>로그인</Button>
       {renderTextArea()}
     </>

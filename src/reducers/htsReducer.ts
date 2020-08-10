@@ -1,19 +1,5 @@
 import produce from 'immer'
-import {
-  HTS_TRADE_INFO_SUCCESS,
-  HTS_API_KEY_REQUESTED,
-  HTS_API_KEY_RESET,
-  HTS_API_KEY_SUCCESS,
-  HTS_API_KEY_FAILED,
-  HTS_API_KEY_STATE_CHANGE,
-  HTS_MARKET_INFO_SUCCESS,
-  HTS_MONEYTRAY_UNIT_CHANGE,
-  HTS_STD_UNIT_CHANGE,
-  HTS_ASSETS_SUCCESS,
-  HTS_EXCHANGE_UPDATE,
-  HTS_MANAGES_SUCCESS
-} from '../actionCmds/htsActionCmd'
-import { htsTypes } from '../actions/htsAction'
+import { htsCmds } from '../actionCmds/htsActionCmd'
 
 const initMap = {
   menuMode: 'hts',
@@ -29,71 +15,71 @@ const initMap = {
   exchange: 'upbit'
 }
 
-const homeReducer = (state = initMap, action: htsTypes) => {
+const homeReducer = (state = initMap, action: any) => {
   let nextState = state
 
   switch (action.type) {
-    case HTS_TRADE_INFO_SUCCESS:
+    case htsCmds.HTS_TRADE_INFO_SUCCESS:
       nextState = produce(state, (draft) => {
-        draft.htsData = action.htsData
+        draft.htsData = action.payload
       })
       break
-    case HTS_API_KEY_REQUESTED:
+    case htsCmds.HTS_API_KEY_REQUESTED:
       nextState = produce(state, (draft) => {
-        draft.registerValue = action.restType.data
+        draft.registerValue = action.payload.data
       })
       break
-    case HTS_API_KEY_RESET:
+    case htsCmds.HTS_API_KEY_RESET:
       nextState = produce(state, (draft) => {
         draft.registerValue = {}
         draft.isValid = false
         draft.apiKeyState = 0
       })
       break
-    case HTS_API_KEY_SUCCESS:
+    case htsCmds.HTS_API_KEY_SUCCESS:
       nextState = produce(state, (draft) => {
         draft.isValid = true
         draft.apiKeyState = 1
       })
       break
-    case HTS_API_KEY_FAILED:
+    case htsCmds.HTS_API_KEY_FAILED:
       nextState = produce(state, (draft) => {
         draft.apiKeyState = -1
       })
       break
-    case HTS_API_KEY_STATE_CHANGE:
+    case htsCmds.HTS_API_KEY_STATE_CHANGE:
       nextState = produce(state, (draft) => {
-        draft.apiKeyState = action.apiKeyState
+        draft.apiKeyState = action.payload
       })
       break
-    case HTS_MARKET_INFO_SUCCESS:
+    case htsCmds.HTS_MARKET_INFO_SUCCESS:
       nextState = produce(state, (draft) => {
-        draft.marketData = action.marketData
+        draft.marketData = action.payload
       })
       break
-    case HTS_MONEYTRAY_UNIT_CHANGE:
+    case htsCmds.HTS_MONEYTRAY_UNIT_CHANGE:
       nextState = produce(state, (draft) => {
-        draft.monetaryUnit = action.monetaryUnit
+        draft.monetaryUnit = action.payload
       })
       break
-    case HTS_STD_UNIT_CHANGE:
+    case htsCmds.HTS_STD_UNIT_CHANGE:
       nextState = produce(state, (draft) => {
-        draft.stdUnit = action.stdUnit
+        draft.stdUnit = action.payload
       })
       break
-    case HTS_ASSETS_SUCCESS:
+    case htsCmds.HTS_ASSETS_SUCCESS:
       nextState = produce(state, (draft) => {
-        draft.assetsData = action.assetsData
+        draft.assetsData = action.payload
       })
       break
-    case HTS_EXCHANGE_UPDATE:
+    case htsCmds.HTS_EXCHANGE_UPDATE:
       nextState = produce(state, (draft) => {
-        draft.exchange = action.exchange
+        draft.exchange = action.payload
       })
       break
-    case HTS_MANAGES_SUCCESS:
+    case htsCmds.HTS_MANAGES_SUCCESS:
       nextState = produce(state, (draft) => {
-        draft.manageData = action.manageData
+        draft.manageData = action.payload
       })
       break
     default:

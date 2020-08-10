@@ -1,15 +1,5 @@
 import produce from 'immer'
-import {
-  MAIL_VALUE_CHANGE_REQUESTED,
-  NAME_VALUE_CHANGE_REQUESTED,
-  PWD_VALUE_CHANGE_REQUESTED,
-  PWD_CHECK_VALUE_CHANGE_REQUESTED,
-  MAIL_DUPLICATION_CHECK_SUCCESS,
-  SIGN_UP_SUCCESS,
-  SIGN_IN_FAILED,
-  SIGN_REDUCER_RESET
-} from '../actionCmds/signActionCmd'
-import { singActionTypes } from '../actions/signAction'
+import { signCmds } from '../actionCmds/signActionCmd'
 
 const initMap = {
   mail: '',
@@ -18,50 +8,66 @@ const initMap = {
   pwdChk: '',
   idExist: false,
   signDone: false,
-  loginFailed: ''
+  loginFailed: '',
+  tokenValid: true
 }
 
-const signReducer = (state = initMap, action: singActionTypes) => {
+const signReducer = (state = initMap, action: any) => {
   let nextState = state
 
   switch (action.type) {
-    case MAIL_VALUE_CHANGE_REQUESTED:
+    case signCmds.MAIL_VALUE_CHANGE_REQUESTED:
       nextState = produce(state, (draft) => {
-        draft.mail = action.mail
+        draft.mail = action.payload
       })
       break
-    case NAME_VALUE_CHANGE_REQUESTED:
+    case signCmds.NAME_VALUE_CHANGE_REQUESTED:
       nextState = produce(state, (draft) => {
-        draft.name = action.name
+        draft.name = action.payload
       })
       break
-    case PWD_VALUE_CHANGE_REQUESTED:
+    case signCmds.PWD_VALUE_CHANGE_REQUESTED:
       nextState = produce(state, (draft) => {
-        draft.pwd = action.pwd
+        draft.pwd = action.payload
       })
       break
-    case PWD_CHECK_VALUE_CHANGE_REQUESTED:
+    case signCmds.PWD_CHECK_VALUE_CHANGE_REQUESTED:
       nextState = produce(state, (draft) => {
-        draft.pwdChk = action.pwdChk
+        draft.pwdChk = action.payload
       })
       break
-    case MAIL_DUPLICATION_CHECK_SUCCESS:
+    case signCmds.MAIL_DUPLICATION_CHECK_SUCCESS:
       nextState = produce(state, (draft) => {
-        draft.idExist = action.idExist
+        draft.idExist = action.payload
       })
       break
-    case SIGN_UP_SUCCESS:
+    case signCmds.SIGN_UP_SUCCESS:
       nextState = produce(state, (draft) => {
-        draft.signDone = action.signDone
+        draft.signDone = action.payload
       })
       break
-    case SIGN_IN_FAILED:
+    case signCmds.SIGN_IN_FAILED:
       nextState = produce(state, (draft) => {
-        draft.loginFailed = action.msg
+        draft.loginFailed = action.payload
       })
       break
-    case SIGN_REDUCER_RESET:
+    case signCmds.SIGN_REDUCER_RESET:
       nextState = reset(state)
+      break
+    case signCmds.SIGN_IN_SUCCESS:
+      nextState = produce(nextState, (draft: any) => {
+        draft.tokenValid = true
+      })
+      break
+    case signCmds.SIGN_MEMBER_CHECK_FAILED:
+      nextState = produce(nextState, (draft: any) => {
+        draft.tokenValid = false
+      })
+      break
+    case signCmds.SIGN_MEMBER_CHECK_SUCCESS:
+      nextState = produce(nextState, (draft: any) => {
+        draft.tokenValid = true
+      })
       break
     default:
       break

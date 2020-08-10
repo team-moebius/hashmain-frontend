@@ -1,12 +1,13 @@
 import { takeEvery, all } from 'redux-saga/effects'
-import { SIGN_UP_REQUESTED, SIGN_IN_REQUESTED, MAIL_VALUE_CHANGE_REQUESTED } from '../../actionCmds/signActionCmd'
-import { fetchSignUp, fetchDuplicationCheck, fetchSignIn } from './signSaga'
+import { signCmds } from '../../actionCmds/signActionCmd'
+import { fetchSignUp, fetchDuplicationCheck, fetchSignIn, checkMember } from './signSaga'
 
 function* signSagas() {
   yield all([
-    takeEvery(MAIL_VALUE_CHANGE_REQUESTED, fetchDuplicationCheck),
-    takeEvery(SIGN_UP_REQUESTED, fetchSignUp),
-    takeEvery(SIGN_IN_REQUESTED, fetchSignIn)
+    takeEvery(signCmds.MAIL_VALUE_CHANGE_REQUESTED, fetchDuplicationCheck),
+    takeEvery(signCmds.SIGN_UP_REQUESTED, fetchSignUp),
+    takeEvery(signCmds.SIGN_IN_REQUESTED, fetchSignIn),
+    takeEvery(signCmds.SIGN_MEMBER_CHECK_REQUESTED, checkMember)
   ])
 }
 

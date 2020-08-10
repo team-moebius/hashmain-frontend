@@ -54,7 +54,7 @@
 }
 
 .marketSelect {
-  width: 120px;
+  width: 100px;
   font-size: 11px;
 }
 
@@ -62,17 +62,21 @@
   color: #B7C8F5;
 }
 
-.ant-select-dropdown-menu-item {
+.marketSelect .ant-select-dropdown {
+  width: 110px;
+}
+
+.ant-select-item {
   font-size: 11px;
 }
 
-.ant-select-dropdown-menu-item:hover {
+.ant-select-item:hover {
   background-color: #1A1C4B !important;
 }
 
 .showAsset {
   display: inline-block;
-  width: 400px;
+  width: 275px;
   height: 41px;
   text-align: right;
   padding: 10px 20px;
@@ -87,8 +91,4 @@
 
 .coinsTable .ant-card-body {
   padding: 10px;
-}
-
-.rowDelete {
-  opacity: 0.4;
 }

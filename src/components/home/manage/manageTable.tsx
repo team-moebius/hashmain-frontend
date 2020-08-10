@@ -15,7 +15,6 @@ function ManageTable() {
     <Card className='manageTableInHts' loading={dataLoading}>
       <Table
         className='customTable'
-        rowKey={(record: any, idx: number) => `manages_${idx}`}
         columns={manageCols()}
         dataSource={manageData}
         size='small'

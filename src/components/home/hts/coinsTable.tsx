@@ -2,14 +2,13 @@ import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Table, Button, Input, Card, Spin } from 'antd'
 
-import { HTS_MARKET_INFO_REQUESTED, HTS_STD_UNIT_CHANGE } from '../../../actionCmds/htsActionCmd'
-import { htsMarketActionActionType, htsStdUnitChangeActionType } from '../../../actions/htsAction'
+import { htsMarketReqAction, htsStdUnitUpdateAction } from '../../../actions/htsAction'
 import { ReducerState } from '../../../reducers/rootReducer'
 import { coinsTableCols } from './coinsTableCols'
 
 interface ICoinsTableProps {
   isRegister: boolean
-  setIsRegister: any
+  // setIsRegister: any
 }
 
 function unitButtons(stdUnit: string, dispatch: any) {
@@ -17,7 +16,7 @@ function unitButtons(stdUnit: string, dispatch: any) {
     if (isdisabled) return '#747474'
     return key === stdUnit ? 'rgb(255, 58, 125)' : '#B7C8F5'
   }
-  const setStdUnit = (key: string) => dispatch(htsStdUnitChangeActionType({ type: HTS_STD_UNIT_CHANGE, stdUnit: key }))
+  const setStdUnit = (key: string) => dispatch(htsStdUnitUpdateAction(key))
   return (
     <>
       <Button type='link' style={{ color: getColor('KRW', false) }} onClick={() => setStdUnit('KRW')}>KRW</Button>
@@ -52,7 +51,7 @@ function CoinsTable(props: ICoinsTableProps) {
   const [inputWord, setInputWord] = useState('')
 
   useEffect(() => {
-    dispatch(htsMarketActionActionType({ type: HTS_MARKET_INFO_REQUESTED, exchange: nowExchange }))
+    dispatch(htsMarketReqAction(nowExchange))
   }, [dispatch, nowExchange])
 
   return (
@@ -74,7 +73,6 @@ function CoinsTable(props: ICoinsTableProps) {
               columns={coinsTableCols(monetaryUnit, dispatch)}
               dataSource={getData(true, inputWord, marketData)}
               size='small'
-              rowKey={(record: any, idx: number) => `coins_${idx}`}
               pagination={false}
               scroll={{ y: isRegister ? '230px' : '679px' }}
             />

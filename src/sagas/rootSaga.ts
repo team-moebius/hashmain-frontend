@@ -1,11 +1,11 @@
 import { all } from 'redux-saga/effects'
 import signSagas from './sign/signSagaIndex'
-import homeSagas from './home/homeSagaIndex'
+import htsSagas from './hts/htsSagaIndex'
 
 function* rootSaga() {
   yield all([
-    homeSagas(),
-    signSagas()
+    signSagas(),
+    htsSagas()
   ])
 }
 

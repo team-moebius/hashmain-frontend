@@ -1,52 +1,55 @@
 import { call, put } from 'redux-saga/effects'
-import { getDuplicateApi, postSignUpApi, postSignInApi } from '../../apis/signApi'
+import { getDuplicateApi, postSignUpApi, postSignInApi, checkMemberApi } from '../../apis/signApi'
 import {
-  SIGN_UP_SUCCESS,
-  SIGN_UP_FAILED,
-  MAIL_DUPLICATION_CHECK_SUCCESS,
-  MAIL_DUPLICATION_CHECK_FAILED,
-  SIGN_IN_SUCCESS,
-  SIGN_IN_FAILED
-} from '../../actionCmds/signActionCmd'
-import {
-  signUpFailedAction,
-  signUpSuccessAction,
-  mailDupFailedAction,
-  mailDupSuccessAction,
-  signInSuccessAction,
-  signInFailedAction
+  mailDupSucAction,
+  mailDupFailAction,
+  signUpSucAction,
+  signUpFailAction,
+  signInSucAction,
+  signInFailAction,
+  memberCheckSucAction,
+  memberCheckFailAction
 } from '../../actions/signAction'
 
 export function* fetchDuplicationCheck(action: any) {
   try {
-    const result = yield call(getDuplicateApi, action.mail)
+    const result = yield call(getDuplicateApi, action.payload)
     const isExist = !!result.data
-    yield put(mailDupSuccessAction({ type: MAIL_DUPLICATION_CHECK_SUCCESS, idExist: isExist }))
+    yield put(mailDupSucAction(isExist))
   } catch (err) {
     const errMsg = err.response ? err.response.data.message : err.message
-    yield put(mailDupFailedAction({ type: MAIL_DUPLICATION_CHECK_FAILED, msg: errMsg }))
+    yield put(mailDupFailAction(errMsg))
   }
 }
 
 export function* fetchSignUp(action: any) {
   try {
-    const result = yield call(postSignUpApi, action.mail, action.name, action.pwd)
-    yield put(signUpSuccessAction({ type: SIGN_UP_SUCCESS, signDone: result.data === 'OK' }))
+    const result = yield call(postSignUpApi, action.payload.mail, action.payload.name, action.payload.pwd)
+    yield put(signUpSucAction(result.data === 'OK'))
   } catch (err) {
     const errMsg = err.response ? err.response.data.message : err.message
-    yield put(signUpFailedAction({ type: SIGN_UP_FAILED, msg: errMsg }))
+    yield put(signUpFailAction(errMsg))
   }
 }
 
 export function* fetchSignIn(action: any) {
   try {
     // const result = yield call(postSignInApi, 'burette@hanyang.ac.kr', 'highbal1')
-    const result = yield call(postSignInApi, action.mail, action.pwd)
+    const result = yield call(postSignInApi, action.payload.mail, action.payload.pwd)
     window.localStorage.setItem('token', result.data.token)
     // window.location.reload()
-    yield put(signInSuccessAction({ type: SIGN_IN_SUCCESS }))
+    yield put(signInSucAction())
   } catch (err) {
     const errMsg = err.response ? err.response.data.message : err.message
-    yield put(signInFailedAction({ type: SIGN_IN_FAILED, msg: errMsg }))
+    yield put(signInFailAction(errMsg))
+  }
+}
+
+export function* checkMember() {
+  try {
+    yield call(checkMemberApi)
+    yield put(memberCheckSucAction())
+  } catch (err) {
+    yield put(memberCheckFailAction())
   }
 }

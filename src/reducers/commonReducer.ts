@@ -1,22 +1,21 @@
 import produce from 'immer'
-import { commonActionTypes } from '../actions/commonAction'
-import { SIGN_IN_SUCCESS } from '../actionCmds/signActionCmd'
+import { commonCmds } from '../actionCmds/commonActionCmd'
 
 const initMap = {
   loading: {},
   success: {},
   failed: {},
-  tokenValid: true
+  menuMode: 'hts'
 }
 
-const commonReducer = (state = initMap, action: commonActionTypes) => {
+const commonReducer = (state = initMap, action: any) => {
   let nextState = state
   nextState = checkLoading(nextState, action)
   nextState = checkTokenVaild(nextState, action)
   switch (action.type) {
-    case SIGN_IN_SUCCESS:
-      nextState = produce(nextState, (draft: any) => {
-        draft.tokenValid = true
+    case commonCmds.HOME_MENU_CHANGE_REQUESTED:
+      nextState = produce(state, (draft) => {
+        draft.menuMode = action.payload
       })
       break
     default:
@@ -62,7 +61,7 @@ function checkLoading(nextState: any, action: any) {
 
 function checkTokenVaild(nextState: any, action: any) {
   if (action.type.indexOf('_FAILED') > -1) {
-    if (action.msg.indexOf('[Auth]') > -1) {
+    if (action.payload.indexOf('[Auth]') > -1) {
       nextState = produce(nextState, (draft: any) => {
         draft.tokenValid = false
       })

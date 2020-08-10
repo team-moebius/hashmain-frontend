@@ -1,13 +1,12 @@
-import { mailAction, nameAction, pwdAction, pwdChkAction, signUpAction } from '../../actions/signAction'
 import {
-  MAIL_VALUE_CHANGE_REQUESTED,
-  NAME_VALUE_CHANGE_REQUESTED,
-  PWD_VALUE_CHANGE_REQUESTED,
-  PWD_CHECK_VALUE_CHANGE_REQUESTED,
-  SIGN_UP_REQUESTED,
-  SIGN_UP_RESET,
-  SIGN_IN_FAILED
-} from '../../actionCmds/signActionCmd'
+  mailAction,
+  nameAction,
+  pwdAction,
+  pwdChkAction,
+  signUpReqAction,
+  signUpResetAction,
+  signInFailAction
+} from '../../actions/signAction'
 import { openNotification } from '../../common/common'
 
 function mailCheck(id: string): boolean {
@@ -35,19 +34,19 @@ export function ruleCheck(dispatch: any, type: number, value: string, pwdCnf = '
   switch (type) {
     case 0:
       isLegal = mailCheck(value)
-      if (isLegal) { dispatch(mailAction({ type: MAIL_VALUE_CHANGE_REQUESTED, mail: value })) }
+      if (isLegal) { dispatch(mailAction(value)) }
       break
     case 1:
       isLegal = nameCheck(value)
-      if (isLegal) { dispatch(nameAction({ type: NAME_VALUE_CHANGE_REQUESTED, name: value })) }
+      if (isLegal) { dispatch(nameAction(value)) }
       break
     case 2:
       isLegal = passwordCheck(value)
-      if (isLegal) { dispatch(pwdAction({ type: PWD_VALUE_CHANGE_REQUESTED, pwd: value })) }
+      if (isLegal) { dispatch(pwdAction(value)) }
       break
     default:
       isLegal = passwordConfirmCheck(value, pwdCnf)
-      if (isLegal) { dispatch(pwdChkAction({ type: PWD_CHECK_VALUE_CHANGE_REQUESTED, pwdChk: value })) }
+      if (isLegal) { dispatch(pwdChkAction(value)) }
       break
   }
   return isLegal
@@ -62,15 +61,15 @@ export function signUpClick(
     openNotification('error', '입력을 확인해주세요.')
     return
   }
-  dispatch(signUpAction({ type: SIGN_UP_REQUESTED, mail: email, name: userName, pwd: password }))
+  dispatch(signUpReqAction({ mail: email, name: userName, pwd: password }))
 }
 
 export function signupFailed(dispatch: any) {
   openNotification('error', '잠시 후 다시 시도해주세요.')
-  dispatch({ type: SIGN_UP_RESET })
+  dispatch(signUpResetAction())
 }
 
 export function signInFailedFunc(dispatch: any) {
   openNotification('error', 'ID/PW를 확인해주세요.')
-  dispatch({ type: SIGN_IN_FAILED, msg: '' })
+  dispatch(signInFailAction(''))
 }

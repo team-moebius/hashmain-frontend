@@ -1,8 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { Tabs } from 'antd'
-import { HOME_MENU_CHANGE_REQUESTED } from '../../actionCmds/homeActionCmd'
-import { homeMenuActionType } from '../../actions/homeAction'
+import { homeMenuAction } from '../../actions/commonAction'
 import { getSvg } from './loadIcon'
 import '../../style/menuIcon.css'
 
@@ -20,7 +19,7 @@ function LeftMenu() {
           tabPosition='right'
           className='leftTabs'
           tabBarGutter={30}
-          onChange={(key) => { dispatch(homeMenuActionType({ type: HOME_MENU_CHANGE_REQUESTED, menuMode: key })) }}
+          onChange={(key) => { dispatch(homeMenuAction(key)) }}
         >
           {menus.map((key) => (
             <Tabs.TabPane tab={getSvg(key)} key={key}>

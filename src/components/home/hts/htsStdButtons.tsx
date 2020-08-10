@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Button, Select } from 'antd'
 
 import { ReducerState } from '../../../reducers/rootReducer'
-import { HTS_EXCHANGE_UPDATE } from '../../../actionCmds/htsActionCmd'
-import { htsExchangeActionType } from '../../../actions/htsAction'
+import { htsExchangeUpdateAction } from '../../../actions/htsAction'
 
 import binance from '../../../images/logos/binance.png'
 import bithumb from '../../../images/logos/bithumb.png'
@@ -39,7 +38,7 @@ export function HTSBtns(stdUnit: string, setStdUnit: any) {
         defaultValue={exchange}
         className='marketSelect'
         onSelect={(value: string) => {
-          dispatch(htsExchangeActionType({ type: HTS_EXCHANGE_UPDATE, exchange: value }))
+          dispatch(htsExchangeUpdateAction(value))
         }}>
         <Option value='upbit'><img src={upbit} style={iconSize} alt='' />UPBIT</Option>
         <Option value='bithumb' disabled style={{ color: 'rgb(116, 116, 116)' }}>

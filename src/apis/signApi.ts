@@ -23,3 +23,8 @@ export const postSignInApi = (mail: string, pwd: string) => {
   })
   return result
 }
+
+export const checkMemberApi = () => {
+  const result = instant.get('members')
+  return result
+}

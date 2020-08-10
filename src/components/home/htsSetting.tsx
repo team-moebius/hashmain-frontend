@@ -8,16 +8,12 @@ import RightSection from './hts/rightSection'
 import ManageTable from './manage/manageTable'
 import { ReducerState } from '../../reducers/rootReducer'
 import {
-  HTS_TRADE_INFO_REQUESTED, HTS_TRADE_ORDER_REQUESTED, HTS_ASSETS_REQUESTED, HTS_MANAGES_REQUESTED
-} from '../../actionCmds/htsActionCmd'
-import {
-  htsInfoActionType, htsOrderActionType, htsAssetsActionType, htsManagesActionType
+  htsInfoReqAction, htsOrderReqAction, htsAssetsReqAction, htsManagesReqAction
 } from '../../actions/htsAction'
 import { orderRegisterCheck } from './hts/rules'
 import { HTSBtns } from './hts/htsStdButtons'
 import { openNotification } from '../../common/common'
 import '../../style/hts.css'
-
 
 function buildDtos(htsData: any): Array<Object> {
   return [].concat(htsData.sale).concat(htsData.purchase).concat(htsData.stoploss)
@@ -52,13 +48,7 @@ function renderErrorMsg(erros : {
 }
 
 function HTSBody(
-  dataLoading: boolean,
-  monetaryUnit: string,
-  dispatch: any,
-  stdUnit: string,
-  data: any,
-  setData: any,
-  assetsData: any
+  dataLoading: boolean, monetaryUnit: string, dispatch: any, stdUnit: string, data: any, setData: any, assetsData: any
 ) {
   return (
     <div className='backgroundColor' style={{ opacity: 1 }}>
@@ -72,14 +62,14 @@ function HTSBody(
         </Card>
         <Card style={{ display: 'inline-block', border: '0px solid white', width: '100%' }} loading={dataLoading}>
           <HtsTable
-            type='stoploss' stdUnit={stdUnit} monetaryUnit={monetaryUnit} tableData={data} setTableData={setData} />
+            type='stopLoss' stdUnit={stdUnit} monetaryUnit={monetaryUnit} tableData={data} setTableData={setData} />
         </Card>
         <Card style={{ display: 'inline-block', border: '0px solid white', width: '100%' }} loading={dataLoading}>
           <Button
             style={{ width: '100%', backgroundColor: '#0A0A28' }}
             onClick={() => {
               if (renderErrorMsg(orderRegisterCheck(data, stdUnit, assetsData))) {
-                dispatch(htsOrderActionType({ type: HTS_TRADE_ORDER_REQUESTED, dtos: buildDtos(data) }))
+                dispatch(htsOrderReqAction(buildDtos(data)))
               }
             }}
           >주문 등록</Button>
@@ -124,9 +114,9 @@ function HTSSetting() {
 
   useEffect(() => {
     if (Object.keys(htsData).length === 0) {
-      dispatch(htsInfoActionType({ type: HTS_TRADE_INFO_REQUESTED, menuType: selectedTab }))
-      dispatch(htsAssetsActionType({ type: HTS_ASSETS_REQUESTED, exchange: nowExchage }))
-      dispatch(htsManagesActionType({ type: HTS_MANAGES_REQUESTED, exchange: nowExchage }))
+      dispatch(htsInfoReqAction(selectedTab))
+      dispatch(htsAssetsReqAction(nowExchage))
+      dispatch(htsManagesReqAction(nowExchage))
     } else { setData(htsData) }
   }, [dispatch, selectedTab, htsData, nowExchage])
 

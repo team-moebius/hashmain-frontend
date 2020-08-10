@@ -110,7 +110,7 @@ function getState(state: ReducerState) {
   const { sign, common } = state
   return ({
     mail: sign.mail,
-    pwd: state.sign.pwd,
+    pwd: sign.pwd,
     name: sign.name,
     pwdChk: sign.pwdChk,
     idExist: sign.idExist,

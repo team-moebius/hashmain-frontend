@@ -13,7 +13,7 @@ export const headerNames = {
     volume: '매수 수량',
     total: '주문총액'
   },
-  stoploss: {
+  stopLoss: {
     title: '주문 포지션-감시 지정 매도',
     price: '감시 지정가',
     rate: '주문 비율',
