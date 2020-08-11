@@ -29,3 +29,8 @@
 .reusltView .ant-result-title {
   color: #B7C8F5;
 }
+
+.loginBox .ant-form-item-explain {
+  text-align: left;
+  margin-left: 5px;
+}

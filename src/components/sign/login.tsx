@@ -1,12 +1,11 @@
 import React, { useEffect } from 'react'
-import { Input, Button, Badge } from 'antd'
+import { Form, Input, Button, Badge } from 'antd'
 import { MailOutlined, LockOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { signInReqAction, signResetAction } from '../../actions/signAction'
 import { ReducerState } from '../../reducers/rootReducer'
 import { signInFailedFunc } from '../sign/signFuntions'
 import { useCustomRouter } from '../../common/router/routerPush'
-// import { openNotification } from '../../common/common'
 
 function renderTextArea(): React.ReactElement {
   return (
@@ -34,7 +33,6 @@ function Login() {
   const dispatch = useDispatch()
   const { signInFailed } = useSelector((state: ReducerState) => ({ signInFailed: state.sign.loginFailed }))
   const token = window.localStorage.getItem('token')
-  const inputValue = { mail: '', pwd: '' }
 
   useEffect(() => {
     if (signInFailed) { signInFailedFunc(dispatch) }
@@ -43,30 +41,34 @@ function Login() {
 
   return (
     <>
-      <Input
-        style={{ marginTop: '10px', textAlign: 'left' }}
-        placeholder='E-Mail'
-        onChange={(e) => { inputValue.mail = e.target.value }}
-        prefix={<MailOutlined style={{ marginRight: '5px' }} />}
-      />
-      <Input.Password
-        style={{ marginTop: '10px', textAlign: 'left' }}
-        placeholder='Password'
-        onChange={(e) => { inputValue.pwd = e.target.value }}
-        prefix={<LockOutlined style={{ marginRight: '10px' }} />}
-      />
-      <Button
-        className='customBtn'
-        type='primary'
-        style={{ marginTop: '15px', width: '100%' }}
-        onClick={() => {
-          // if (!inputValue.mail || !inputValue.pwd) {
-          //   openNotification('error', '입력을 확인해주세요.')
-          //   return
-          // }
-          dispatch(signInReqAction({ mail: inputValue.mail, pwd: inputValue.pwd }))
+      <Form
+        className='loginBox'
+        style={{ marginTop: '15px' }}
+        onFinish={(value) => {
+          dispatch(signInReqAction({ mail: value.email, pwd: value.password }))
           dispatch(signResetAction())
-        }}>로그인</Button>
+        }}>
+        <Form.Item
+          label=''
+          name='email'
+          rules={[{ required: true, message: 'E-Mail을 입력해주세요!' }]}>
+          <Input placeholder='E-Mail' prefix={<MailOutlined style={{ marginRight: '5px' }} />} />
+        </Form.Item>
+        <Form.Item
+          label=''
+          name='password'
+          rules={[{ required: true, message: 'PW를 입력해주세요!' }]}>
+          <Input.Password
+            placeholder='Password'
+            prefix={<LockOutlined style={{ marginRight: '10px' }} />}
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button type='primary' htmlType='submit' className='customBtn' style={{ width: '100%' }}>
+            로그인
+          </Button>
+        </Form.Item>
+      </Form>
       {renderTextArea()}
     </>
   )
