@@ -19,8 +19,7 @@ function LeftMenu() {
           tabPosition='right'
           className='leftTabs'
           tabBarGutter={30}
-          onChange={(key) => { dispatch(homeMenuAction(key)) }}
-        >
+          onChange={(key) => { dispatch(homeMenuAction(key)) }}>
           {menus.map((key) => (
             <Tabs.TabPane tab={getSvg(key)} key={key}>
               <></>
