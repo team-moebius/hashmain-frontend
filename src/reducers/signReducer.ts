@@ -14,6 +14,7 @@ const initMap = {
 
 const signReducer = (state = initMap, action: any) => {
   let nextState = state
+  nextState = checkTokenVaild(nextState, action)
 
   switch (action.type) {
     case signCmds.MAIL_VALUE_CHANGE_REQUESTED:
@@ -76,6 +77,17 @@ const signReducer = (state = initMap, action: any) => {
 }
 
 export default signReducer
+
+function checkTokenVaild(nextState: any, action: any) {
+  if (action.type.indexOf('_FAILED') > -1) {
+    if (action.payload.indexOf('[Auth]') > -1) {
+      nextState = produce(nextState, (draft: any) => {
+        draft.tokenValid = false
+      })
+    }
+  }
+  return nextState
+}
 
 function reset(state: typeof initMap): typeof initMap {
   return produce(state, (draft) => {
