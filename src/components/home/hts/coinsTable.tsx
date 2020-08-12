@@ -70,6 +70,7 @@ function CoinsTable(props: ICoinsTableProps) {
           <Card className='coinsTable' loading={dataLoading}>
             <Table
               className='customTable'
+              showSorterTooltip={false}
               columns={coinsTableCols(monetaryUnit, dispatch)}
               dataSource={getData(true, inputWord, marketData)}
               size='small'

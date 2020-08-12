@@ -127,8 +127,9 @@ function HTSSetting() {
           className='leftTabs backgroundColor contentsHeader'
           defaultActiveKey={selectedTab}
           style={{ width: '520px', display: 'inline-block' }}
-          onChange={(key) => { setSelectedTab(key) }}
-        ><Tabs.TabPane tab={<p style={{ margin: 0, fontWeight: 600 }}>멀티거래 모드</p>} key='trade' /></Tabs>
+          onChange={(key) => { setSelectedTab(key) }}>
+          <Tabs.TabPane tab={<p style={{ margin: '0', padding: '0 10px', fontWeight: 600 }}>멀티거래 모드</p>} key='trade' />
+        </Tabs>
         {showAsset(assetsData, stdUnit, monetaryUnit)}
         {HTSBtns(stdUnit, setStdUnit)}
         {HTSBody(dataLoading, monetaryUnit, dispatch, stdUnit, data, setData, assetsData)}

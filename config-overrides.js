@@ -26,8 +26,8 @@ module.exports = override(
       '@select-dropdown-bg': '#212163',
       '@select-background': '#1A1C4B',
       '@select-item-selected-bg': '#1A1C4B',
-      '@select-item-active-bg': '#1A1C4B'
+      '@select-item-active-bg': '#1A1C4B',
+      '@table-body-sort-bg': 'rgba(0, 0, 0, 0)'
     }
   })
-  // addWebpackModuleRule({})
 )

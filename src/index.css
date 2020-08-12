@@ -70,10 +70,9 @@ html {
   padding: 3.5px 8px;
 }
 
-.customTable .ant-table-header {
-  margin-bottom: -20px !important;
+.customTable .ant-table-column-has-sorters:hover {
+  background-color: rgba(0, 0, 0, 0) !important;
 }
-
 .customTable .ant-input-number{
   height: 25px;
 }
@@ -87,6 +86,11 @@ html {
   padding: 0px;
   background-color: #101037;
   border-top: 0px;
+}
+
+.customTable .ant-table-cell-scrollbar {
+  -webkit-box-shadow: 0 0px 0 0px #fafafa;
+  box-shadow: 0 0px 0 0px #fafafa;
 }
 
 .tableInputNumber .ant-input-number-handler-wrap {

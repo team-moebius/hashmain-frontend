@@ -39,6 +39,10 @@
   width: 920px;
 }
 
+.contentsHeader .ant-tabs-nav {
+  margin-bottom: 0;
+}
+
 .contents {
   display: inline-block;
   margin-left: 20px;
