@@ -4,7 +4,7 @@ import { htsCmds } from '../actionCmds/htsActionCmd'
 const initMap = {
   menuMode: 'hts',
   htsData: {},
-  manageData: [{}],
+  manageData: [{ key: 'empty' }],
   registerValue: {},
   isValid: false,
   apiKeyState: 0, // -1: fail, 0: none, 1: success

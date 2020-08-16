@@ -11,7 +11,7 @@ const initMap = {
 const commonReducer = (state = initMap, action: any) => {
   let nextState = state
   nextState = checkLoading(nextState, action)
-  nextState = checkTokenVaild(nextState, action)
+
   switch (action.type) {
     case commonCmds.HOME_MENU_CHANGE_REQUESTED:
       nextState = produce(state, (draft) => {
@@ -55,17 +55,6 @@ function checkLoading(nextState: any, action: any) {
       draft.success[key] = false
       draft.failed[key] = false
     })
-  }
-  return nextState
-}
-
-function checkTokenVaild(nextState: any, action: any) {
-  if (action.type.indexOf('_FAILED') > -1) {
-    if (action.payload.indexOf('[Auth]') > -1) {
-      nextState = produce(nextState, (draft: any) => {
-        draft.tokenValid = false
-      })
-    }
   }
   return nextState
 }
